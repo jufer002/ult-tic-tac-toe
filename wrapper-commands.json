@@ -1,0 +1,19 @@
+{
+  "wrapper": {
+    "timebankMax": 10000,
+    "timePerMove": 100,
+    "maxTimeouts": 0,
+    "resultFile": "./resultfile.json",
+    "debug": true
+  },
+  "match": {
+    "bots": [{
+      "command": "python3 /home/jfernand/440/utt/main.py"
+    },{
+      "command": "python3 /home/jfernand/440/utt/main.py"
+    }],
+    "engine": {
+      "command": "java -jar /home/jfernand/440/utt/ultimate-tic-tac-toe-engine-1.0.5.jar"
+    }
+  }
+}
