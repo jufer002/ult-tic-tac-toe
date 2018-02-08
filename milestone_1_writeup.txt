@@ -1,0 +1,53 @@
+Julian Fernandez
+
+1. What's working?
+
+My bot successfully runs a UTT board through its network and outputs a move with the 
+highest expected reward value. It can play UTT, and every 25 moves it will run
+backpropagation and adjust its weights. It can both save its weights to folders.
+Every move it makes is assigned a reward, and it adjusts its weights based on
+these rewards.
+
+weights-0 is the weights that adjust so player 0 wins.
+weights-1 is the weights that adjust so player 1 wins.
+
+2. What's not working?
+
+I haven't been able to figure out how to send my bot a positive reward
+because the engine doesn't send messages to bots once a winning move has been
+made. It's been training very poorly, and I think this is the reason. It usually
+outputs illegal moves and is forced to move randomly.
+
+If you run the UTT engine and look at bot_messages-x, you'll see
+"I am moving purposefully" whenever a move is made that is from the
+network, and "I am moving randomly" whenever a move is made randomly.
+You'll see that usually it moves randomly.
+
+My ideas to improve this are:
+1. Maybe I can figure out a way to run some code after the game finishes
+and maybe I can read from the file and somehow give feedback on the winning/losing
+move.
+2. Maybe I should give a positive reward for solving one of the games on the macroboard.
+3. Maybe I should do 2. and write a bash script so that it trains thousands of times.
+
+Also, maybe I should set up a mechanism so that it does not infinitely write to text files
+under any circumstance. I think this was happening from accidentally running my tests
+with debug = False and starting the infinite parsing loop.
+
+3. How have I had to expand my original thinking?
+
+I've changed my activation function from Leaky ReLU to regular ReLU because it's easier
+in tensorflow, and because I don't think it will make much of a difference.
+
+I'm using a different loss function than I originally proposed. Now it's:
+
+reduce_mean(predicted_reward - actual_reward)^2
+
+instead of the log-loss that I had originally planned. This loss function makes
+sense as higher differences in the expected vs. actual output lead to more cost,
+and if the network became perfect and always predicted the actual reward,
+the network would have zero cost and not adjust its weights.
+
+There were also a lot of smaller implementation details I hadn't thought of when I proposed
+the project like training two bots-one that optimizes for player 0 winning
+and the other that optimizes for player 1 winning, and dealing with illegal moves.

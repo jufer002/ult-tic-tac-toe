@@ -1,0 +1,1 @@
+java -jar match-wrapper-1.3.2.jar "$(cat wrapper-commands.json)"

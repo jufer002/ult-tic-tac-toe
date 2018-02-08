@@ -1,0 +1,26 @@
+Julian Fernandez
+
+What's working?
+
+My bot plays against itself - trainer.py has it play against
+itself 10,000 times, storing each move and its associated
+reward in a big list. Every 25 moves, it goes through all
+these moves and rewards and does backprop, minimizing
+the difference between given rewards and rewards outputted
+by the network.
+
+What's not working?
+
+Sometimes I get cryptic errors about Cuda. I think this may
+not happen anymore, but it's hard to know. The only thing I
+think I need to do is have experience replay choose games
+randomly instead of going through them sequentially. Then,
+I'll tweak the learning rate/rate at which it experience
+replays to make the bot good at playing.
+
+How have I had to modify my thinking described in my paper?
+
+I didn't discuss the random element of experience replay in
+my paper, and I didn't originally know that I would need a
+separate process to collect all the games in a buffer, so
+I've had to implement those changes.

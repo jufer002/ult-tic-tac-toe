@@ -16,7 +16,6 @@ class Field:
 
     # Initialize the macroboard and microboard with the empty field constant.
     def __init__(self):
-
         # Microboard
         null_row = []
         for col in range(self.__NUM_COLS):
@@ -53,7 +52,7 @@ class Field:
                 self.__mMacroboard[x][y] = r[counter]
                 counter += 1
 
-    # Return an array of all open spots on all the microboards.
+    # Return an array of all open spots on the active microboard.
     def getAvailableMoves(self):
         moves = []
         for y in range(self.__NUM_ROWS):
@@ -61,7 +60,15 @@ class Field:
                 if (self.isInActiveMicroboard(x, y) and (self.__mBoard[x][y] == self. __EMPTY_FIELD)):
                     moves.append(Move(x,y))
         return moves
+    
+    # Return microboard
+    def getMicroboard(self):
+        return self.__mBoard
 
+    # Return macroboard
+    def getMacroboard(self):
+        return self.__mMacroboard
+    
     # Are (x, y) in a microboard that is still in play?
     # x, y - integers
     def isInActiveMicroboard(self, x, y):
@@ -125,8 +132,6 @@ class Field:
     def setOpponentId(self, id):
         self.__opponentId = id
         
-        
-        
 class Move:
     '''
     A Move represents a UTT move. Used to get strings from bots to
@@ -154,6 +159,17 @@ class Move:
     def toString(self):
         return "place_move {} {}".format(self.__x, self.__y)
 
+    # Overide equality tests so they work.
+    def __eq__(self, other):
+        if not isinstance(self, other.__class__):
+            return False
+
+        return self.getX() == other.getX() and self.getY() == other.getY()
+
+    # Overide inequality tests so they work.
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 class Player:
     '''
     A Player is a container for the UTT player's name.
@@ -180,7 +196,13 @@ class BotState:
     def __init__(self):
         self.__field = Field()
         self.__players = {}
-
+    
+    # Is a given move legal?
+    def isLegalMove(self, move):
+        x = move.getX()
+        y = move.getY()
+        return self.__field.isInActiveMicroboard(x, y) and self.__field.getMicroboard()[x][y] == '.'
+    
     # Sets current time bot has in timebank.
     # value - int 
     def setTimebank(self, value):
@@ -261,16 +283,22 @@ class BotParser:
         print(msg)
         sys.stdout.flush()
 
+    def getLog(self):
+        return self.__log
+
     # Main loop: reads input from bot and sends it to its message handler.
     def run(self):
         while not sys.stdin.closed:
             try:
                 rawline = sys.stdin.readline()
+
                 line = rawline.strip()
                 self.handle_message(line)
+
             except EOFError:
                 self.__log.write('EOF')
                 self.__log.close()
+        
         return
 
     # Parses a single command from a bot. Sends its command to the appropriate place.
@@ -297,6 +325,7 @@ class BotParser:
                 if move != None:
                     #sys.stdout.write(move.toString())
                     self.output(move.toString())
+                    
                 else:
                     #sys.stdout.write("pass")
                     self.output("pass")
@@ -326,6 +355,10 @@ class BotParser:
 
             elif key == "your_botid":
                 myId = int(value)
+
+                # Added by me (Julian)
+                self.__bot.set_id(myId)
+
                 opponentId = 2 - myId + 1
                 self.__currentState.getField().setMyId(myId)
                 self.__currentState.getField().setOpponentId(opponentId)
@@ -355,6 +388,7 @@ class BotParser:
 
             else:
                 self.__log.write("Cannot parse game data input with key {}".format(key))
+
         except:
             self.__log.write("Cannot parse game data value {} for key {}".format(value, key))
             #e.printStackTrace()
@@ -365,14 +399,15 @@ class Log:
     A Log encapsulates file writing. The logfiles it produces
     are records of how bots behaved.
     '''
-    __FNAME = "/tmp/bot-log.txt"
+    __FNAME = "bot-log.txt"
 
     def __init__(self, fname=None):
+        return
         if (fname == None):
             import os
 
             pid = os.getpid()
-            self.__FNAME = "/tmp/bot-log" + str(pid) + ".txt"
+            self.__FNAME = "bot-log" + str(pid) + ".txt"
         else:
             self.__FNAME = fname
 
@@ -380,10 +415,12 @@ class Log:
 
     # Write to its file.
     def write(self, msg):
+        return
         self.__FILE.write(msg)
 
     # Close file output stream.
     def close(self):
+        return
         self.write("Closing log file.")
         self.__FILE.close()
 

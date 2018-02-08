@@ -1,19 +1,19 @@
 {
-  "wrapper": {
-    "timebankMax": 10000,
-    "timePerMove": 100,
-    "maxTimeouts": 0,
-    "resultFile": "./resultfile.json",
-    "debug": true
+  'wrapper': {
+    'timebankMax': 10000,
+    'timePerMove': 100,
+    'maxTimeouts': 0,
+    'resultFile': 'resultfile.json',
+    'debug': true
   },
-  "match": {
-    "bots": [{
-      "command": "python3 /home/jfernand/440/utt/main.py"
+  'match': {
+    'bots': [{
+      'command': 'python3 main.py'
     },{
-      "command": "python3 /home/jfernand/440/utt/main.py"
-    }],
-    "engine": {
-      "command": "java -jar /home/jfernand/440/utt/ultimate-tic-tac-toe-engine-1.0.5.jar"
+      'command': 'python3 main.py'
+    },],
+    'engine': {
+      'command': 'java -jar ultimate-tic-tac-toe-engine-1.0.5.jar'
     }
   }
 }
