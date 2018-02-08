@@ -1,4 +1,4 @@
-# ult-tic-tac-toe
+# Reinforcement Learning for Ultimate Tic Tac Toe
 This is a deep reinforcement learning project where I implemented Q-Learning to train a neural network to play Ultimate Tic Tac Toe.
 
 Most of the interesting code is in trainer.py
